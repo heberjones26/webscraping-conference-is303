@@ -51,7 +51,8 @@ def drop_table():
 # skipping session videos and the Sustaining page.
 def get_talk_urls():
     base_url = "https://www.churchofjesuschrist.org"
-    index_url = base_url + "/study/general-conference/2025/10?lang=eng"
+    # Updated to pull from most recent conference - Heber
+    index_url = base_url + "/study/general-conference/2026/04?lang=eng"
  
     # requests.get() downloads the page HTML
     response = requests.get(index_url)
@@ -116,6 +117,8 @@ def main():
         #   member2.scrape_and_save(talk_urls, engine)
         print("Talk URLs ready — passing to Member 2's scraper.")
         # TODO: call Member 2's scrape_and_save() here
+
+
  
         print("You've saved the scraped data to your postgres database.")
  
@@ -134,4 +137,20 @@ def main():
 # directly, not when another teammate imports it.
 if __name__ == "__main__":
     main()
+
+
+# Scraping function - Heber (Member 2)
+
+def scrape_and_save(talk_ursl, engine) :
+
+    # Scrape data from every URL in the list prodived
+    for url in talk_ursl :
+        # Convert the URL into scrapable data
+        oResponse = requests.get(url)
+        soup = BeautifulSoup(oResponse.text, "html.parser")
+
+        # The data we want to scrape is: 
+        # speaker name, title, and kicker
+        # Footnotes, and update scripture reference count
+
 
