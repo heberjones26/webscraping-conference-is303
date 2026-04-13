@@ -116,7 +116,7 @@ def main():
         # below with a call to their function, e.g.:
         #   member2.scrape_and_save(talk_urls, engine)
         print("Talk URLs ready — passing to Member 2's scraper.")
-        # TODO: call Member 2's scrape_and_save() here
+        # call Member 2's scrape_and_save() here
         scrape_and_save(talk_urls)
 
  
@@ -179,6 +179,10 @@ def scrape_and_save(talk_urls):
             speaker_name = header_section.find("p", class_="author-name").get_text(strip=True) if header_section else None
             title = header_section.find("h1").get_text(strip=True) if header_section else None
             kicker = header_section.find("p", class_="kicker").get_text(strip=True) if header_section else None
+
+            standard_works_dict['Speaker_Name'] = speaker_name
+            standard_works_dict['Talk_Name'] = title
+            standard_works_dict['Kicker'] = kicker
         except :
             print("not a talk")
 
@@ -188,7 +192,9 @@ def scrape_and_save(talk_urls):
             iBookReference = footnotes_text.count(books)
             standard_works_dict[books] = iBookReference
 
-        print(speaker_name, title, kicker)
+        # Save the dictionary with reference count and other data to database.
+        df = pd.DataFrame([standard_works_dict])
+        df.to_sql("general_conference", engine, if_exists='append', index=False)
 
 
 # This makes sure main() only runs when you execute THIS file
