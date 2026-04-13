@@ -23,7 +23,7 @@ import matplotlib.pyplot as plot
 # Change these values to match YOUR setup.
  
 USERNAME = "postgres"
-PASSWORD = "your_password_here"   # <-- change this
+PASSWORD = ""   # <-- change this
 HOST     = "localhost"
 DATABASE = "is303"
  
@@ -65,7 +65,7 @@ def get_talk_urls():
     # tile-list section so we don't accidentally grab nav links.
     # The class name below targets the talk tile list — inspect
     # the page in your browser (F12) if this ever needs updating.
-    all_links = soup.find_all("a", class_="item")
+    all_links = soup.find_all("a", class_="list-tile")
  
     talk_urls = []   # we'll fill this list with valid talk URLs
  
@@ -117,7 +117,7 @@ def main():
         #   member2.scrape_and_save(talk_urls, engine)
         print("Talk URLs ready — passing to Member 2's scraper.")
         # TODO: call Member 2's scrape_and_save() here
-        scrape_and_save(talk_ursl)
+        scrape_and_save(talk_urls)
 
  
         print("You've saved the scraped data to your postgres database.")
@@ -131,22 +131,16 @@ def main():
  
     else:
         print("Closing the program.")
- 
- 
-# This makes sure main() only runs when you execute THIS file
-# directly, not when another teammate imports it.
-if __name__ == "__main__":
-    main()
 
 
 # Scraping function - Heber (Member 2)
 
-def scrape_and_save(talk_ursl) :
+def scrape_and_save(talk_urls):
 
-    # Scrape data from every URL in the list prodived
-    for url in talk_ursl :
+    # Scrape data from every URL in the list provided
+    for url in talk_urls:
         # Create a dictionary to track references for each book of scripture:
-        standard_works_dict = {'Speaker_Name' : '', 'Talk_Name' : '', 'Kicker' : '', 
+        standard_works_dict = {'Speaker_Name': '', 'Talk_Name': '', 'Kicker': '', 
                                'Matthew': 0, 'Mark': 0, 'Luke': 0, 'John': 0, 'Acts': 0, 
                                'Romans': 0, '1 Corinthians': 0, '2 Corinthians': 0, 
                                'Galatians': 0, 'Ephesians': 0, 'Philippians': 0, 
@@ -174,19 +168,30 @@ def scrape_and_save(talk_ursl) :
         # Convert the URL into scrapable data
         oResponse = requests.get(url)
         soup = BeautifulSoup(oResponse.text, "html.parser")
+        #print(soup.find("div", class_="body"))
 
         # The data we want to scrape is: 
         # speaker name, title, and kicker
         # Footnotes, and update scripture reference count
 
-        header_section = soup.find("header")
-        speaker_name = header_section.find("p", class_="author-name")
-        title = header_section.find("h1")
-        kicker = header_section.find("p", class_="kicker")
+        header_section = soup.find("div", class_="body")
+        try :
+            speaker_name = header_section.find("p", class_="author-name").get_text(strip=True) if header_section else None
+            title = header_section.find("h1").get_text(strip=True) if header_section else None
+            kicker = header_section.find("p", class_="kicker").get_text(strip=True) if header_section else None
+        except :
+            print("not a talk")
 
-        footnotes_section = soup.find('footer', attrs={'class' : 'notes'})
-        for books in standard_works_dict :
-            iBookReference = footnotes_section.count(books)
+        footnotes_section = soup.find('footer', attrs={'class': 'notes'})
+        footnotes_text = footnotes_section.get_text(separator=" ") if footnotes_section else ""
+        for books in standard_works_dict:
+            iBookReference = footnotes_text.count(books)
             standard_works_dict[books] = iBookReference
 
-        print(speaker_name, title, kicker, standard_works_dict)
+        print(speaker_name, title, kicker)
+
+
+# This makes sure main() only runs when you execute THIS file
+# directly, not when another teammate imports it.
+if __name__ == "__main__":
+    main()       
