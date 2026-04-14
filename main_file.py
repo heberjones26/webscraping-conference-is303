@@ -93,48 +93,7 @@ def get_talk_urls():
     print(f"Found {len(talk_urls)} potential talk pages.")
     return talk_urls
  
- 
-# ── Main program loop ─────────────────────────────────────────
-def main():
-    user_input = input(
-        "If you want to scrape data, enter 1. "
-        "If you want to see summaries of stored data, enter 2. "
-        "Enter any other value to exit the program: "
-    )
- 
-    if user_input == "1":
-        # Step 1: wipe any old data
-        drop_table()
- 
-        # Step 2: collect all talk URLs
-        talk_urls = get_talk_urls()
- 
-        # ── Hand off to Member 2 ──────────────────────────────
-        # Member 2's function will loop through talk_urls,
-        # scrape each page, and save rows to postgres.
-        # Once Member 2 writes their code, replace the line
-        # below with a call to their function, e.g.:
-        #   member2.scrape_and_save(talk_urls, engine)
-        print("Talk URLs ready — passing to Member 2's scraper.")
-        # call Member 2's scrape_and_save() here
-        scrape_and_save(talk_urls)
-
- 
-        print("You've saved the scraped data to your postgres database.")
- 
-    elif user_input == "2":
-        # ── Hand off to Member 3 ──────────────────────────────
-        # Member 3 handles the summary sub-menu.
-        # Replace the line below with a call to their function.
-        print("Passing to Member 3's summary menu.")
-        # TODO: call Member 3's show_summaries() here
- 
-    else:
-        print("Closing the program.")
-
-
-# Scraping function - Heber (Member 2)
-
+ # Scraping function - Heber (Member 2)
 def scrape_and_save(talk_urls):
 
     # Scrape data from every URL in the list provided
@@ -196,6 +155,64 @@ def scrape_and_save(talk_urls):
         df = pd.DataFrame([standard_works_dict])
         df.to_sql("general_conference", engine, if_exists='append', index=False)
 
+# ── Summary menu - Member 3 - Tyler ───────────────────────────────────
+# Handles the Part 2 sub-menu. Reads data back from postgres
+# and displays a bar chart of scripture references across
+# all talks combined. 
+def show_summaries():
+    user_input_2 = input("You selected to see summaries. Enter 1 to see a summary of all talks. Enter 2 to select a specific talk. Enter anything else to exit: ")
+    
+    if user_input_2 == "1":
+        # Read all data from postgres into a DataFrame
+        sql_query = 'select * from general_conference'
+        df_postgres = pd.read_sql_query(sql_query, engine)
+
+        # Drop text columns so we can sum the scripture counts
+        # then filter to only books referenced more than 2 times
+        df_sum = df_postgres.drop(['Speaker_Name', 'Talk_Name', 'Kicker'], axis=1).sum()
+        df_sum_filtered = df_sum[df_sum > 2]
+
+        # Build and display the bar chart
+        df_sum_filtered.plot(kind='bar')
+        plot.title('Standard Works Referenced in General Conference')
+        plot.xlabel('Standard Works Books')
+        plot.ylabel('# Times Referenced')
+        plot.show()
+
+    elif user_input_2 == '2':
+# MEMBER 4 WRITES THEIR CODE HERE
+        #This is just a placeholder
+        pass 
+
+    else:
+        print("Closing the program.")
+
+# ── Main program loop ─────────────────────────────────────────
+def main():
+    user_input = input(
+        "If you want to scrape data, enter 1. "
+        "If you want to see summaries of stored data, enter 2. "
+        "Enter any other value to exit the program: "
+    )
+ 
+    if user_input == "1":
+        # Step 1: wipe any old data
+        drop_table()
+ 
+        # Step 2: collect all talk URLs
+        talk_urls = get_talk_urls()
+ 
+        # Step 3: scrape each talk and save to postgres
+        scrape_and_save(talk_urls)
+
+        print("You've saved the scraped data to your postgres database.")
+
+    elif user_input == '2':
+        # Step 4: show summary sub-menu
+        show_summaries()
+    
+    else:
+        print("Closing the program.")
 
 # This makes sure main() only runs when you execute THIS file
 # directly, not when another teammate imports it.
