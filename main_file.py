@@ -1,5 +1,6 @@
 # Main Program File.
 
+
 ## General Conference Web Scraper - Member 1: (Carl) Setup & Scraping
 # Description: This file handles the program entry point,
 # database setup, and collecting all talk URLs from the
@@ -10,6 +11,7 @@ import requests
 import pandas as pd
 import sqlalchemy
 import matplotlib.pyplot as plot
+
 
 # ── Database setup ───────────────────────────────────────────
 # sqlalchemy needs a "connection string" that tells it where
@@ -23,7 +25,7 @@ import matplotlib.pyplot as plot
 # Change these values to match YOUR setup.
  
 USERNAME = "postgres"
-PASSWORD = ""   # <-- change this
+PASSWORD = "He11gat3$$"   # <-- change this
 HOST     = "localhost"
 DATABASE = "is303"
  
@@ -96,42 +98,46 @@ def get_talk_urls():
  # Scraping function - Heber (Member 2)
 def scrape_and_save(talk_urls):
 
+
     # Scrape data from every URL in the list provided
     for url in talk_urls:
         # Create a dictionary to track references for each book of scripture:
-        standard_works_dict = {'Speaker_Name': '', 'Talk_Name': '', 'Kicker': '', 
-                               'Matthew': 0, 'Mark': 0, 'Luke': 0, 'John': 0, 'Acts': 0, 
-                               'Romans': 0, '1 Corinthians': 0, '2 Corinthians': 0, 
-                               'Galatians': 0, 'Ephesians': 0, 'Philippians': 0, 
-                               'Colossians': 0, '1 Thessalonians': 0, '2 Thessalonians': 0, 
-                               '1 Timothy': 0, '2 Timothy': 0, 'Titus': 0, 'Philemon': 0, 
-                               'Hebrews': 0, 'James': 0, '1 Peter': 0, '2 Peter': 0, 
-                               '1 John': 0, '2 John': 0, '3 John': 0, 'Jude': 0, 
-                               'Revelation': 0, 'Genesis': 0, 'Exodus': 0, 'Leviticus': 0, 
-                               'Numbers': 0, 'Deuteronomy': 0, 'Joshua': 0, 'Judges': 0, 
-                               'Ruth': 0, '1 Samuel': 0, '2 Samuel': 0, '1 Kings': 0, 
-                               '2 Kings': 0, '1 Chronicles': 0, '2 Chronicles': 0, 'Ezra': 0, 
-                               'Nehemiah': 0, 'Esther': 0, 'Job': 0, 'Psalm': 0, 'Proverbs': 0, 
-                               'Ecclesiastes': 0, 'Song of Solomon': 0, 'Isaiah': 0, 
-                               'Jeremiah': 0, 'Lamentations': 0, 'Ezekiel': 0, 'Daniel': 0, 
-                               'Hosea': 0, 'Joel': 0, 'Amos': 0, 'Obadiah': 0, 'Jonah': 0, 
-                               'Micah': 0, 'Nahum': 0, 'Habakkuk': 0, 'Zephaniah': 0, 
-                               'Haggai': 0, 'Zechariah': 0, 'Malachi': 0, '1 Nephi': 0, 
-                               '2 Nephi': 0, 'Jacob': 0, 'Enos': 0, 'Jarom': 0, 'Omni': 0, 
-                               'Words of Mormon': 0, 'Mosiah': 0, 'Alma': 0, 'Helaman': 0, 
-                               '3 Nephi': 0, '4 Nephi': 0, 'Mormon': 0, 'Ether': 0, 'Moroni': 0, 
-                               'Doctrine and Covenants': 0, 'Moses': 0, 'Abraham': 0, 
-                               'Joseph Smith—Matthew': 0, 'Joseph Smith—History': 0, 
+        standard_works_dict = {'Speaker_Name': '', 'Talk_Name': '', 'Kicker': '',
+                               'Matthew': 0, 'Mark': 0, 'Luke': 0, 'John': 0, 'Acts': 0,
+                               'Romans': 0, '1 Corinthians': 0, '2 Corinthians': 0,
+                               'Galatians': 0, 'Ephesians': 0, 'Philippians': 0,
+                               'Colossians': 0, '1 Thessalonians': 0, '2 Thessalonians': 0,
+                               '1 Timothy': 0, '2 Timothy': 0, 'Titus': 0, 'Philemon': 0,
+                               'Hebrews': 0, 'James': 0, '1 Peter': 0, '2 Peter': 0,
+                               '1 John': 0, '2 John': 0, '3 John': 0, 'Jude': 0,
+                               'Revelation': 0, 'Genesis': 0, 'Exodus': 0, 'Leviticus': 0,
+                               'Numbers': 0, 'Deuteronomy': 0, 'Joshua': 0, 'Judges': 0,
+                               'Ruth': 0, '1 Samuel': 0, '2 Samuel': 0, '1 Kings': 0,
+                               '2 Kings': 0, '1 Chronicles': 0, '2 Chronicles': 0, 'Ezra': 0,
+                               'Nehemiah': 0, 'Esther': 0, 'Job': 0, 'Psalm': 0, 'Proverbs': 0,
+                               'Ecclesiastes': 0, 'Song of Solomon': 0, 'Isaiah': 0,
+                               'Jeremiah': 0, 'Lamentations': 0, 'Ezekiel': 0, 'Daniel': 0,
+                               'Hosea': 0, 'Joel': 0, 'Amos': 0, 'Obadiah': 0, 'Jonah': 0,
+                               'Micah': 0, 'Nahum': 0, 'Habakkuk': 0, 'Zephaniah': 0,
+                               'Haggai': 0, 'Zechariah': 0, 'Malachi': 0, '1 Nephi': 0,
+                               '2 Nephi': 0, 'Jacob': 0, 'Enos': 0, 'Jarom': 0, 'Omni': 0,
+                               'Words of Mormon': 0, 'Mosiah': 0, 'Alma': 0, 'Helaman': 0,
+                               '3 Nephi': 0, '4 Nephi': 0, 'Mormon': 0, 'Ether': 0, 'Moroni': 0,
+                               'Doctrine and Covenants': 0, 'Moses': 0, 'Abraham': 0,
+                               'Joseph Smith—Matthew': 0, 'Joseph Smith—History': 0,
                                'Articles of Faith': 0}
+
 
         # Convert the URL into scrapable data
         oResponse = requests.get(url)
         soup = BeautifulSoup(oResponse.text, "html.parser")
         #print(soup.find("div", class_="body"))
 
-        # The data we want to scrape is: 
+
+        # The data we want to scrape is:
         # speaker name, title, and kicker
         # Footnotes, and update scripture reference count
+
 
         header_section = soup.find("div", class_="body")
         try :
@@ -139,11 +145,13 @@ def scrape_and_save(talk_urls):
             title = header_section.find("h1").get_text(strip=True) if header_section else None
             kicker = header_section.find("p", class_="kicker").get_text(strip=True) if header_section else None
 
+
             standard_works_dict['Speaker_Name'] = speaker_name
             standard_works_dict['Talk_Name'] = title
             standard_works_dict['Kicker'] = kicker
         except :
             print("not a talk")
+
 
         footnotes_section = soup.find('footer', attrs={'class': 'notes'})
         footnotes_text = footnotes_section.get_text(separator=" ") if footnotes_section else ""
@@ -151,26 +159,117 @@ def scrape_and_save(talk_urls):
             iBookReference = footnotes_text.count(books)
             standard_works_dict[books] = iBookReference
 
+
         # Save the dictionary with reference count and other data to database.
         df = pd.DataFrame([standard_works_dict])
         df.to_sql("general_conference", engine, if_exists='append', index=False)
 
+
+# ── Member 4 - Jake ─────────────────────────────────────────
+
+
+def display_talk_list(df):
+    print("The following are the names of speakers and their talks:")
+
+
+    talk_map = {}
+
+
+    for display_num, (index, row) in enumerate(df.iterrows(), start=1):
+        speaker = row["Speaker_Name"]
+        talk_name = row["Talk_Name"]
+        print(f"{display_num}: {speaker} - {talk_name}")
+        talk_map[display_num] = index
+
+
+    return talk_map
+
+
+
+
+def graph_selected_talk(df, selected_index):
+    selected_row = df.loc[selected_index]
+
+
+    # Remove non-scripture columns
+    non_reference_columns = ["Speaker_Name", "Talk_Name", "Kicker"]
+    reference_data = selected_row.drop(labels=non_reference_columns)
+
+
+    # Make sure everything is numeric
+    reference_data = pd.to_numeric(reference_data, errors="coerce").fillna(0)
+
+
+    # Only keep books with at least 1 reference
+    reference_data = reference_data[reference_data >= 1]
+
+
+    if reference_data.empty:
+        print("This talk has no scripture references to display.")
+        return
+
+
+    reference_data.plot(kind="bar")
+    plot.title(f"Standard Works Referenced in: {selected_row['Talk_Name']}")
+    plot.xlabel("Standard Works Books")
+    plot.ylabel("# Times Referenced")
+    plot.xticks(rotation=45)
+    plot.tight_layout()
+    plot.show()
+
+
+
+
+def specific_talk_summary():
+    df = pd.read_sql_query("SELECT * FROM general_conference", engine)
+
+
+    if df.empty:
+        print("No data found. Run option 1 first.")
+        return
+
+
+    talk_map = display_talk_list(df)
+
+
+    user_choice = input("Please enter the number of the talk you want to see summarized: ")
+
+
+    try:
+        user_choice = int(user_choice)
+
+
+        if user_choice not in talk_map:
+            print("Invalid talk number.")
+            return
+
+
+        selected_index = talk_map[user_choice]
+        graph_selected_talk(df, selected_index)
+
+
+    except ValueError:
+        print("Invalid input. Please enter a number.")
+
+
 # ── Summary menu - Member 3 - Tyler ───────────────────────────────────
 # Handles the Part 2 sub-menu. Reads data back from postgres
 # and displays a bar chart of scripture references across
-# all talks combined. 
+# all talks combined.
 def show_summaries():
     user_input_2 = input("You selected to see summaries. Enter 1 to see a summary of all talks. Enter 2 to select a specific talk. Enter anything else to exit: ")
-    
+   
     if user_input_2 == "1":
         # Read all data from postgres into a DataFrame
         sql_query = 'select * from general_conference'
         df_postgres = pd.read_sql_query(sql_query, engine)
 
+
         # Drop text columns so we can sum the scripture counts
         # then filter to only books referenced more than 2 times
         df_sum = df_postgres.drop(['Speaker_Name', 'Talk_Name', 'Kicker'], axis=1).sum()
         df_sum_filtered = df_sum[df_sum > 2]
+
 
         # Build and display the bar chart
         df_sum_filtered.plot(kind='bar')
@@ -179,13 +278,14 @@ def show_summaries():
         plot.ylabel('# Times Referenced')
         plot.show()
 
+
     elif user_input_2 == '2':
-# MEMBER 4 WRITES THEIR CODE HERE
-        #This is just a placeholder
-        pass 
+        specific_talk_summary()
+
 
     else:
         print("Closing the program.")
+
 
 # ── Main program loop ─────────────────────────────────────────
 def main():
@@ -205,16 +305,20 @@ def main():
         # Step 3: scrape each talk and save to postgres
         scrape_and_save(talk_urls)
 
+
         print("You've saved the scraped data to your postgres database.")
+
 
     elif user_input == '2':
         # Step 4: show summary sub-menu
         show_summaries()
-    
+   
     else:
         print("Closing the program.")
+
 
 # This makes sure main() only runs when you execute THIS file
 # directly, not when another teammate imports it.
 if __name__ == "__main__":
-    main()       
+    main()
+      
