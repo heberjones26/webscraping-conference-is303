@@ -1,4 +1,5 @@
-# Main Program File.
+# Contributors: Carl Ripplinger, Tyler Vanderwood, Heber Jones, Jake Gardenier
+# This program scrapes the April 2026 general conference and get's scripture reference data from all of the talks.
 
 
 ## General Conference Web Scraper - Member 1: (Carl) Setup & Scraping
@@ -25,7 +26,7 @@ import matplotlib.pyplot as plot
 # Change these values to match YOUR setup.
  
 USERNAME = "postgres"
-PASSWORD = "He11gat3$$"   # <-- change this
+PASSWORD = ""   # <-- change this
 HOST     = "localhost"
 DATABASE = "is303"
  
@@ -151,11 +152,15 @@ def scrape_and_save(talk_urls):
             standard_works_dict['Kicker'] = kicker
         except :
             print("not a talk")
+            continue
 
 
         footnotes_section = soup.find('footer', attrs={'class': 'notes'})
         footnotes_text = footnotes_section.get_text(separator=" ") if footnotes_section else ""
+        non_scripture_keys = {'Speaker_Name', 'Talk_Name', 'Kicker'}
         for books in standard_works_dict:
+            if books in non_scripture_keys:
+                continue
             iBookReference = footnotes_text.count(books)
             standard_works_dict[books] = iBookReference
 
